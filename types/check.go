@@ -1,13 +1,18 @@
 package types
 
 import (
+	"fmt"
+
 	. "github.com/mentalpumkins/clite-go/ast"
 )
 
-func typeOf(node Node) Type {
-	return Type("bool")
+type DuplicateDeclerationError Variable
+
+func (e DuplicateDeclerationError) Error() string {
+	return fmt.Sprintf("Duplicate decleration %s", e)
 }
 
-func StaticCheck(node Node) bool {
-
+func StaticCheck(prog Program) bool {
+	//tm := Typing(prog)
+	return true
 }
