@@ -13,12 +13,15 @@ func (e DuplicateDeclerationError) Error() string {
 	return fmt.Sprintf("Duplicate decleration %s", Variable(e))
 }
 
-/*
-func StaticCheck(prog Program) bool {
-	//tm := Typing(prog)
-	return true
+func Check(prog *Program) (bool, TypeChecker, error) {
+	tc := new(TypeChecker)
+	if err := tc.Init(prog); err != nil {
+		return false, tc, nil
+	}
+	Walk(tc, prog)
+
+	return (tc.ErrCount == 0), tc, nil
 }
-*/
 
 type ErrorHandler func(string, ...interface{})
 
@@ -57,6 +60,7 @@ func (tc *TypeChecker) error(msg string, args ...interface{}) {
 	tc.err(msg, args...)
 }
 
+// Really mostly for debuging
 func (tc *TypeChecker) String() string {
 	return fmt.Sprintf("TypeChecker Map: %s ErrCount: %d", tc.tm, tc.ErrCount)
 }
