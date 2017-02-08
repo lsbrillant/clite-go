@@ -1,22 +1,36 @@
 package lexer
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/mentalpumkins/clite-go/token"
-	"log"
 )
 
+type ErrorHandler func(pos token.Position, msg string)
+
+var DefaultErrorHandler ErrorHandler = func(pos token.Position, msg string) {
+	fmt.Fprintf(os.Stderr, "error %s at %s\n", msg, pos)
+}
+
 type Lexer struct {
-	src        []byte
+	src []byte
+	err ErrorHandler
+
 	ch         rune
 	offset     int
 	rdOffset   int
+	lineCount  int
 	lineOffset int
+
+	ErrorCount int
 }
 
 func (l *Lexer) next() {
 	if l.rdOffset < len(l.src) {
 		l.offset = l.rdOffset
 		if l.ch == '\n' {
+			l.lineCount++
 			l.lineOffset = l.offset
 		}
 		r, w := rune(l.src[l.rdOffset]), 1
@@ -28,15 +42,17 @@ func (l *Lexer) next() {
 	} else {
 		l.offset = len(l.src)
 		if l.ch == '\n' {
+			l.lineCount++
 			l.lineOffset = l.offset
 		}
 		l.ch = -1 // eof
 	}
 }
 
-func (l *Lexer) Lex() (tok token.Token, lit string) {
+func (l *Lexer) Lex() (pos token.Position, tok token.Token, lit string) {
 scanAgain:
 	l.skipWhitespace()
+	pos = l.Pos()
 	switch ch := l.ch; {
 	case isLetter(ch):
 		lit = l.scanIdentifier()
@@ -125,13 +141,24 @@ scanAgain:
 
 func (l *Lexer) Init(src []byte) {
 	l.src = src
+
 	l.ch = ' '
 	l.offset = 0
 	l.rdOffset = 0
+	l.lineCount = 1
+	l.lineOffset = 0
+	l.ErrorCount = 0
+
+	l.err = DefaultErrorHandler
+}
+
+func (l *Lexer) Pos() token.Position {
+	return token.Position{l.offset, l.lineCount, (l.offset - l.lineOffset)}
 }
 
 func (l *Lexer) error(msg string) {
-	log.Fatal(msg)
+	l.ErrorCount++
+	l.err(l.Pos(), msg)
 }
 
 func (l *Lexer) AtEof() bool {
