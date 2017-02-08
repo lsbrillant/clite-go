@@ -1,3 +1,4 @@
+//Package clite-go/print provides a pretty printer for clite
 package print
 
 import (

@@ -11,6 +11,7 @@ type ErrorHandler func(pos token.Position, msg string)
 
 var DefaultErrorHandler ErrorHandler = func(pos token.Position, msg string) {
 	fmt.Fprintf(os.Stderr, "error %s at %s\n", msg, pos)
+	os.Exit(1)
 }
 
 type Lexer struct {

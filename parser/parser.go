@@ -290,6 +290,7 @@ func (p *Parser) match(t token.Token) {
 
 func (p *Parser) error(msg string) {
 	fmt.Fprintf(os.Stderr, "error %s at %s\n", msg, p.pos)
+	os.Exit(1)
 }
 
 func isLiteral(t token.Token) bool {

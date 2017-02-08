@@ -1,3 +1,6 @@
+// Package token provides deffinitions for the token
+// type of the clite language. As well as utility
+// functions relating to said tokens.
 package token
 
 import "strconv"
