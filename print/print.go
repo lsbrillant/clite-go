@@ -7,6 +7,15 @@ import (
 	. "github.com/mentalpumkins/clite-go/ast"
 )
 
+func PrettyPrint(w io.Writer, prog *ast.Program) {
+	pp := PrettyPrinter{
+		Target:      w,
+		Indent:      "  ",
+		Indentlevel: 0,
+	}
+	ast.Walk(pp, prog)
+}
+
 type PrettyPrinter struct {
 	Target      io.Writer
 	Indent      string
@@ -51,6 +60,7 @@ func (p PrettyPrinter) Visit(node Node) Visitor {
 		p.Printi("Decl: %s %s\n", n.Var, n.T)
 		return nil
 	}
+	// set indent to one more
 	return PrettyPrinter{
 		p.Target,
 		p.Indent,
@@ -58,10 +68,12 @@ func (p PrettyPrinter) Visit(node Node) Visitor {
 	}
 }
 
+// Prints without indentation
 func (p PrettyPrinter) Print(s string, args ...interface{}) {
 	fmt.Fprintf(p.Target, s, args...)
 }
 
+// Prints with indentation
 func (p PrettyPrinter) Printi(s string, args ...interface{}) {
 	padd := ""
 	// padd out the indent
