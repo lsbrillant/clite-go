@@ -2,7 +2,7 @@ package parser
 
 import (
 	"fmt"
-	"log"
+	"os"
 	"strconv"
 
 	"github.com/mentalpumkins/clite-go/ast"
@@ -14,11 +14,12 @@ type Parser struct {
 	tok token.Token
 	lit string
 	lex lexer.Lexer
+	pos token.Position
 }
 
 func (p *Parser) Init(l lexer.Lexer) {
 	p.lex = l
-	p.tok, p.lit = p.lex.Lex()
+	p.nextTok()
 }
 
 func (p *Parser) Program() *ast.Program {
@@ -145,13 +146,13 @@ func (p *Parser) sType() ast.Type {
 	var t ast.Type
 	switch p.tok {
 	case token.INT:
-		t = ast.Type("int")
+		t = ast.INT_TYPE
 	case token.FLOAT:
-		t = ast.Type("float")
+		t = ast.FLOAT_TYPE
 	case token.CHAR:
-		t = ast.Type("char")
+		t = ast.CHAR_TYPE
 	case token.BOOL:
-		t = ast.Type("bool")
+		t = ast.BOOL_TYPE
 	default:
 		p.error("Expecting Type")
 	}
@@ -275,7 +276,7 @@ func (p *Parser) literal() ast.Value {
 }
 
 func (p *Parser) nextTok() token.Token {
-	p.tok, p.lit = p.lex.Lex()
+	p.pos, p.tok, p.lit = p.lex.Lex()
 	return p.tok
 }
 
@@ -288,7 +289,7 @@ func (p *Parser) match(t token.Token) {
 }
 
 func (p *Parser) error(msg string) {
-	log.Fatal(msg)
+	fmt.Fprintf(os.Stderr, "error %s at %s\n", msg, p.pos)
 }
 
 func isLiteral(t token.Token) bool {
