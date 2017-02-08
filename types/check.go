@@ -13,7 +13,7 @@ func (e DuplicateDeclerationError) Error() string {
 	return fmt.Sprintf("Duplicate decleration %s", Variable(e))
 }
 
-func Check(prog *Program) (bool, TypeChecker, error) {
+func Check(prog *Program) (bool, *TypeChecker, error) {
 	tc := new(TypeChecker)
 	if err := tc.Init(prog); err != nil {
 		return false, tc, nil
@@ -46,6 +46,12 @@ func (tc *TypeChecker) Init(prog *Program) error {
 }
 
 func (tc *TypeChecker) Visit(node Node) Visitor {
+	if v, ok := node.(Variable); ok {
+		// don't like this pointer dereference syntax but whatever...
+		if _, inMap := (*(tc.tm))[v]; !inMap {
+			tc.error("Undefined Variable ref %s\n", v)
+		}
+	}
 	ans := tc.tm.IsTypeCorrect(node)
 	if !ans {
 		tc.error("Bad typeing for %s", node)

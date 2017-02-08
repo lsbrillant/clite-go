@@ -82,7 +82,7 @@ func (tm *TypeMap) typeOf(exp Expr) (t Type) {
 		t, ok = (*tm)[e]
 		if !ok {
 			// TODO actual error handleing
-			panic("Undifined Variable ref")
+			//panic("Undifined Variable ref")
 		}
 	case *Binary:
 		switch e.Op {

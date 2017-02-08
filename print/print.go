@@ -7,13 +7,13 @@ import (
 	. "github.com/mentalpumkins/clite-go/ast"
 )
 
-func PrettyPrint(w io.Writer, prog *ast.Program) {
+func PrettyPrint(w io.Writer, prog *Program) {
 	pp := PrettyPrinter{
 		Target:      w,
 		Indent:      "  ",
 		Indentlevel: 0,
 	}
-	ast.Walk(pp, prog)
+	Walk(pp, prog)
 }
 
 type PrettyPrinter struct {

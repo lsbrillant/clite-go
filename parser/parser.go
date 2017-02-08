@@ -145,13 +145,13 @@ func (p *Parser) sType() ast.Type {
 	var t ast.Type
 	switch p.tok {
 	case token.INT:
-		t = ast.Type("int")
+		t = ast.INT_TYPE
 	case token.FLOAT:
-		t = ast.Type("float")
+		t = ast.FLOAT_TYPE
 	case token.CHAR:
-		t = ast.Type("char")
+		t = ast.CHAR_TYPE
 	case token.BOOL:
-		t = ast.Type("bool")
+		t = ast.BOOL_TYPE
 	default:
 		p.error("Expecting Type")
 	}

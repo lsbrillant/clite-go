@@ -8,7 +8,7 @@ type Node interface {
 	//	node()
 }
 
-// Expression = VariableRef | Value | Biniary | Unary
+// Expression = VariableRef | Value | Binary | Unary
 type Expr interface {
 	Node
 	exprNode()
