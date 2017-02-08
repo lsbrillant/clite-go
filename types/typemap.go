@@ -1,13 +1,17 @@
 package types
 
 import (
+	"fmt"
+
 	. "github.com/mentalpumkins/clite-go/ast"
 )
 
 type TypeMap map[Variable]Type
 
-// Gives the typing a Program.
+// Gives the typing of a Program.
 // Creating a new TypeMap out of an ast.Program
+// Typing Returns a new TypeMap of the typing of
+// the suplied program.
 func Typing(p *Program) (*TypeMap, error) {
 	tm := TypeMap(make(map[Variable]Type))
 	for _, decl := range p.DecPart {
@@ -19,7 +23,7 @@ func Typing(p *Program) (*TypeMap, error) {
 				tm[d.Var] = d.T
 			} else {
 				// You done screwed up.
-				return nil, DuplicateDeclerationError(val)
+				return nil, DuplicateDeclerationError(string(val))
 			}
 		}
 	}
@@ -125,4 +129,13 @@ func (tm *TypeMap) typeOf(exp Expr) (t Type) {
 		}
 	}
 	return
+}
+
+func (tm *TypeMap) String() string {
+	s := "TypeMap {\n"
+	for key, val := range *tm {
+		s += fmt.Sprintf("  %s : %s,\n", key, val)
+	}
+	s += "}"
+	return s
 }
