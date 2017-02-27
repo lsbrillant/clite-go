@@ -1,8 +1,10 @@
 package types
 
 import (
-	"github.com/mentalpumkins/clite-go/ast"
 	"testing"
+
+	"github.com/mentalpumkins/clite-go/ast"
+	"github.com/mentalpumkins/clite-go/ast/operators"
 )
 
 var testCases = [...]struct {
@@ -23,7 +25,7 @@ var testCases = [...]struct {
 			ast.Variable("a"): ast.INT_TYPE,
 			ast.Variable("b"): ast.FLOAT_TYPE,
 		}),
-		&ast.Binary{"-", ast.Variable("a"), ast.Variable("b")},
+		&ast.Binary{operators.Operator("-"), ast.Variable("a"), ast.Variable("b")},
 		ast.FLOAT_TYPE,
 	},
 }

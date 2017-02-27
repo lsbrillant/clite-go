@@ -63,7 +63,7 @@ func (b BoolVal) GetValue() interface{}  { return bool(b) }
 func (i IntVal) String() string   { return fmt.Sprintf("%d", i) }
 func (c CharVal) String() string  { return fmt.Sprintf("%c", c) }
 func (f FloatVal) String() string { return fmt.Sprintf("%f", f) }
-func (b BoolVal) String() string  { return fmt.Sprintf("%s", b) }
+func (b BoolVal) String() string  { return fmt.Sprintf("%s", bool(b)) }
 
 // Values are nodes
 func (n IntVal) node()   {}

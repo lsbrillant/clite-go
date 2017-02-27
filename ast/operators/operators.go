@@ -43,4 +43,5 @@ const (
 	INT   Operator = "int"
 	FLOAT          = "float"
 	CHAR           = "char"
+	BOOL           = "bool"
 )

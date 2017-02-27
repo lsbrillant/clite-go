@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	. "github.com/mentalpumkins/clite-go/ast"
+	"github.com/mentalpumkins/clite-go/ast/operators"
 )
 
 var staticCheckTestCases = [...]struct {
@@ -34,7 +35,7 @@ var staticCheckTestCases = [...]struct {
 				&Assignment{
 					Variable("b"),
 					&Binary{
-						"*",
+						operators.Operator("*"),
 						Variable("b"),
 						Variable("a"),
 					},
@@ -58,7 +59,7 @@ var staticCheckTestCases = [...]struct {
 				},
 			},
 		},
-		1,
+		0,
 	},
 }
 

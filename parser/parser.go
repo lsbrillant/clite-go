@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/mentalpumkins/clite-go/ast"
+	"github.com/mentalpumkins/clite-go/ast/operators"
 	"github.com/mentalpumkins/clite-go/lexer"
 	"github.com/mentalpumkins/clite-go/token"
 )
@@ -162,7 +163,7 @@ func (p *Parser) sType() ast.Type {
 func (p *Parser) expression() ast.Expr {
 	e := p.conjunction()
 	for p.tok == token.OR {
-		op := p.lit
+		op := operators.Operator(p.lit)
 		p.match(p.tok)
 		term2 := p.conjunction()
 		e = &ast.Binary{op, e, term2}
@@ -172,7 +173,7 @@ func (p *Parser) expression() ast.Expr {
 func (p *Parser) conjunction() ast.Expr {
 	e := p.equality()
 	for p.tok == token.AND {
-		op := p.lit
+		op := operators.Operator(p.lit)
 		p.match(p.tok)
 		term2 := p.equality()
 		e = &ast.Binary{op, e, term2}
@@ -182,7 +183,7 @@ func (p *Parser) conjunction() ast.Expr {
 func (p *Parser) equality() ast.Expr {
 	e := p.relation()
 	if isRelOp(p.tok) {
-		op := p.lit
+		op := operators.Operator(p.lit)
 		p.match(p.tok)
 		term2 := p.relation()
 		e = &ast.Binary{op, e, term2}
@@ -192,7 +193,7 @@ func (p *Parser) equality() ast.Expr {
 func (p *Parser) relation() ast.Expr {
 	e := p.addition()
 	if isRelOp(p.tok) {
-		op := p.lit
+		op := operators.Operator(p.lit)
 		p.match(p.tok)
 		term2 := p.addition()
 		e = &ast.Binary{op, e, term2}
@@ -202,7 +203,7 @@ func (p *Parser) relation() ast.Expr {
 func (p *Parser) addition() ast.Expr {
 	e := p.term()
 	for isAddOp(p.tok) {
-		op := p.lit
+		op := operators.Operator(p.lit)
 		p.match(p.tok)
 		term2 := p.term()
 		e = &ast.Binary{op, e, term2}
@@ -212,7 +213,7 @@ func (p *Parser) addition() ast.Expr {
 func (p *Parser) term() ast.Expr {
 	e := p.factor()
 	for isMulOp(p.tok) {
-		op := p.lit
+		op := operators.Operator(p.lit)
 		p.match(p.tok)
 		term2 := p.factor()
 		e = &ast.Binary{op, e, term2}
@@ -221,7 +222,7 @@ func (p *Parser) term() ast.Expr {
 }
 func (p *Parser) factor() ast.Expr {
 	if isUnaryOp(p.tok) {
-		op := p.lit
+		op := operators.Operator(p.lit)
 		p.match(p.tok)
 		term := p.primary()
 		return &ast.Unary{op, term}
@@ -242,7 +243,7 @@ func (p *Parser) primary() ast.Expr {
 		e = p.expression()
 		p.match(token.RIGHTPAREN)
 	case isType(t):
-		op := p.lit
+		op := operators.Operator(p.lit)
 		p.match(p.tok)
 		p.match(token.LEFTPAREN)
 		term := p.expression()

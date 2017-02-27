@@ -1,8 +1,6 @@
 package ast
 
-import (
-//	"local/clite/token"
-)
+import "github.com/mentalpumkins/clite-go/ast/operators"
 
 type Node interface {
 	//	node()
@@ -41,12 +39,12 @@ func (n *Program) node() {}
 type (
 	Variable string
 	Binary   struct {
-		Op    string
+		Op    operators.Operator
 		Term1 Expr
 		Term2 Expr
 	}
 	Unary struct {
-		Op   string
+		Op   operators.Operator
 		Term Expr
 	}
 )
